@@ -6,6 +6,7 @@ from scipy.optimize import curve_fit
 import pandas as pd
 import HPGe_Calibration as clb
 from mpl_toolkits.axes_grid.anchored_artists import AnchoredText
+import random
 from multiprocessing import Pool
 from lmfit.models import GaussianModel
 import time
@@ -16,22 +17,22 @@ import uncertainties
 today = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 print(today)
 
-# plt.rc('text', usetex=True)
-# plt.rc('font', family='serif')
-# plt.rcParams['text.latex.preamble'] = [
-#     r'\usepackage{siunitx}',
-#     r'\usepackage{isotope}',
-#     r'\sisetup{detect-all}',
-#     r'\usepackage{lmodern}',
-# ]
-# plt.rcParams['ps.usedistiller'] = 'xpdf'
-# plt.rcParams['ps.distiller.res'] = '100'
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif')
+plt.rcParams['text.latex.preamble'] = [
+    r'\usepackage{siunitx}',
+    r'\usepackage{isotope}',
+    r'\sisetup{detect-all}',
+    r'\usepackage{fourier}',
+]
+plt.rcParams['ps.usedistiller'] = 'xpdf'
+plt.rcParams['ps.distiller.res'] = '16000'
 
 start_time = time.time()
 os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2\Vals')
-analmystlist = np.genfromtxt('vals_mystery_R101117g2_20180314_013535.csv', delimiter=',', dtype='float')
+# analmystlist = np.genfromtxt('vals_mystery_R101117g2_20180314_013535.csv', delimiter=',', dtype='float')
 # analmystlist = np.genfromtxt('vals_shieldedbackground_R061117g2_20180314_014320.csv', delimiter=',', dtype='float')
-# analmystlist = np.genfromtxt('vals_unshielded_R141117g2_20180314_014304.csv', delimiter=',', dtype='float')
+analmystlist = np.genfromtxt('vals_unshielded_R141117g2_20180314_014304.csv', delimiter=',', dtype='float')
 os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2\Ranges')
 
 
@@ -549,58 +550,89 @@ def doot(peak, run, calib=None):
     figure2, = ax.plot(pars.dataset[pars.IndependentVariable],
                        pars.dataset[pars.DependentVariable], 'o', antialiased='True', color='#1c1c1c', mew=1.0, markersize=1.0)
     # thing = RangeTool(ax, pars.dataset, pars.datafilename, figure2, calib)
-    plt.ylabel('Counts ')
-    plt.xlabel('Energy (KeV)')
+    plt.ylabel('Counts ', fontsize=18)
+    plt.xlabel('Energy (KeV)', fontsize=18)
+    plt.yticks(fontsize=14)
+    plt.xticks(fontsize=14)
     plt.xlim([0, 2650])
     plt.ylim([1e0, 1e12])
     plt.yscale('log')
     os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2')
-    matches = pd.read_csv('mystery_20180314_123345.csv')
+    matches = pd.read_csv('unshielded_20180316_150113.csv')
     matches['ID'] = matches.groupby(['Nuclide']).ngroup()
     print(matches)
     texts = []
     # bars = ax.bar(matches['Measured energy'], 5000000, width=0.5)
+    duplicate_array1 = matches[matches.duplicated('Measured energy', keep=False)]
+    duplicate_array2 = duplicate_array1.groupby('Measured energy').apply(lambda x: tuple(x.index)).tolist()
+    indexer = 0
+    for k in range(0, len(duplicate_array2)):
+        str_holder = ""
+        for o in range(0, len(duplicate_array2[k])):
+            if o != len(duplicate_array2[k])-1:
+                print('{}'.format(matches['ID'][duplicate_array2[k][o]]), type('{}'.format(matches['ID'][duplicate_array2[k][o]])))
+                print(matches.loc[duplicate_array2[k][0], 'ID'], type(matches.loc[duplicate_array2[k][0], 'ID']))
+                str_holder += '{},'.format(matches['ID'][duplicate_array2[k][o]])
+            elif o == len(duplicate_array2[k])-1:
+                str_holder += '{}'.format(matches['ID'][duplicate_array2[k][o]])
+        matches.loc[duplicate_array2[k][0], 'ID'] = str_holder
+    drop_indexes = []
+    for k in range(0, len(duplicate_array2)):
+        for o in range(1, len(duplicate_array2[k])):
+            drop_indexes.append(matches.index[duplicate_array2[k][o]])
+    for k in range(0, len(drop_indexes)):
+        matches = matches.drop(drop_indexes[k])
+
+
+    matches.index = pd.RangeIndex(len(matches.index))
+    print(matches)
+    ys = np.logspace(4, 11, len(matches))
+    random.shuffle(ys)
+    print(ys)
     for h in range(0, len(matches)):
         # bars.append(ax.bar(matches['Measured energy'][h], 5000000, width=0.5))
-        texts.append(ax.text(matches['Measured energy'][h], 1e7*(30-matches['Height'][h]), '{}'.format(matches['ID'][h]),
-                             rotation=0, va='center', ha='center', bbox=dict(pad=0, ec='none', fc='w')))
-    adjust_text(texts, force_text=20, force_objects=0, force_points=0,
-                only_move={'points': 'y', 'text': 'y', 'objects': 'y'})
-    for h in range(0, len(texts)):
-        ax.vlines(matches['Measured energy'][h], ymin=0., ymax=texts[h].get_position()[1], linestyles='dashed', colors='r')
+        if len('{}'.format(matches['ID'][h]).split(',')) <= 3:
+            texts.append(ax.text(matches['Measured energy'][h], ys[h], '{}'.format(matches['ID'][h]),
+                                 rotation=0, va='center', ha='center', bbox=dict(pad=0.1, ec='none', fc='w'), fontsize=16))
+        else:
+            texts.append(ax.text(matches['Measured energy'][h], ys[h], '*',
+                                 rotation=0, va='center', ha='center', bbox=dict(pad=0.1, ec='none', fc='w'), fontsize=16))
+            at = AnchoredText("*: {}".format(matches['ID'][h]),
+                              prop=dict(size=16), frameon=True,
+                              loc=3,
+                              )
+            ax.add_artist(at)
 
-    ax.grid(color='k', linestyle='--', alpha=0.2)
-    fig.set_size_inches(16.5, 10.5)
-    
+    adjust_text(texts, force_text=200, force_objects=0, force_points=0, expand_text=(0.4, 0.9), ha='center',
+                only_move={'points': 'y', 'text': 'y', 'objects': 'y'}, lim=100000)
+    for h in range(0, len(texts)):
+        ax.vlines(matches['Measured energy'][h], ymin=0., ymax=texts[h].get_position()[1], linestyles='dashed', colors='r', linewidth=0.95, antialiased=True)
+
+    # ax.grid(color='k', linestyle='--', alpha=0.2)
+    fig.set_size_inches(13.5, 10.5)
+
     print('----{}----'.format(time.time() - start_time))
     print('\n')
     # print('{}_{}_{}'.format(peak, run, calib.__name__))
     # if os.path.isfile('C:\\Users\\Josh\\Documents\\git\HPGe2\Ranges\{}_{}.csv'.format(peak, run)):
     #     pars.singleplot()
     # plt.legend()
+    # plt.savefig('Mystery_primordial_peaks.png', dpi=600)
     fig_manager = plt.get_current_fig_manager()
     fig_manager.window.showMaximized()
     plt.show()
 
 
-# datamatch(analmystlist, energylist, 1, 'mystery')
+# datamatch(analmystlist, energylist, 1, 'unshielded')
 # doot('mystery', '1')
-doot('mystery', 'R101117', clb.g2)
+# doot('mystery', 'R101117', clb.g2)
 # doot('barium133', 'R071117', clb.g2)
 # doot('cobalt60', 'R031117', clb.g2)
 # doot('sodium22', 'R071117', clb.g2)
 
-# doot('unshielded', 'R141117', clb.g2)
+doot('unshielded', 'R141117', clb.g2)
 # doot('shieldedbackground', 'R061117', clb.g2)
 #DataConvert('Data', 'ReadableData')
-# for key in Data:
-#     fig, ax = plt.subplots()
-#     figure2, = ax.plot(Data[key][IndependentVariable], Data[key][DependentVariable], '.')
-#     thing = RangeTool(ax, Data, key, figure2)
-#     fig.set_size_inches(16.5, 10.5)
-#     figManager = plt.get_current_fig_manager()
-#     figManager.window.showMaximized()
-#     print('----{}----'.format(time.time() - start_time))
-#     plt.show()
+
 
 print('Complete')
