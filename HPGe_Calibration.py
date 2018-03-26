@@ -2,18 +2,23 @@ import numpy as np
 from scipy.optimize import curve_fit
 import os
 import pandas as pd
+import uncertainties
 
 os.chdir(r'C:\Users\Josh\Documents\\git\HPGe2')
 xaxis = pd.read_csv('xaxis.csv', header=None, names=['Val'], engine='c')
 
 Na_x = np.array([7.01232586e+02, 1.74965037e+03])  #Measured channel of radiation event
+Na_x_err = np.array([np.sqrt(0.011102163294279857**2 + 0.5**2), np.sqrt(0.01761243504015266**2 + 0.5**2)])
 Na_y = np.array([510.9989461, 1274.537])
 
 Co_x = np.array([1.82921107e+03, 1.61055669e+03])
+Co_x_err = np.array([np.sqrt(0.008763197758336463**2 + 0.5**2), np.sqrt(0.008499313141679555**2 + 0.5**2)])
 Co_y = np.array([1332.492, 1173.228])
 
 Ba_x = np.array([1.10894684e+02, 2.20327386e+02, 3.06345220e+02, 3.79324341e+02, 4.15673991e+02,
                  4.88662025e+02, 5.26734672e+02])
+Ba_x_err = np.array([np.sqrt(0.003414787507654975**2 + 0.5**2), np.sqrt(0.023190300848608642**2 + 0.5**2), np.sqrt(0.03750627373420446**2 + 0.5**2), np.sqrt(0.004038824214326436**2 + 0.5**2),
+                     np.sqrt(0.002412630827232207**2 + 0.5**2), np.sqrt(0.0013612943001614674**2 + 0.5**2), np.sqrt(0.0037455861314070653**2 + 0.5**2)])
 Ba_y = np.array([80.9979, 160.6121, 223.237, 276.3989, 302.8508, 356.0129, 383.8485])
 
 Others_x = np.array([1891.21476395582, 1537.86095435944]) #bi214, bi214
@@ -26,7 +31,8 @@ x2 = np.append(Na_x, Co_x)
 # x3 = np.append(Na_x, Co_x)
 y = np.sort(np.append(y2, Ba_y))
 x = np.sort(np.append(x2, Ba_x))
-
+xerr1 = np.append(Na_x_err, Co_x_err)
+xerr = np.append(xerr1, Ba_x_err)
 ## Polynomials
 
 
@@ -42,7 +48,7 @@ def g4(v, k, l, m, n):
 sigs = [0.0000013, 0.003, 0.004, 0.003, 0.0011, 0.0016, 0.002, 0.0012, 0.0005, 0.0007, 0.0012]
 
 def calibrate(calib_func):
-    popt, pcov = curve_fit(calib_func, x, y, sigma=sigs, absolute_sigma=True, maxfev=100000)
+    popt, pcov = curve_fit(calib_func, x, y, sigma=xerr, absolute_sigma=True, maxfev=100000)
     err = np.diag(pcov)
     low_div = popt - err
     high_div = popt + err
@@ -54,7 +60,12 @@ def calibrate(calib_func):
                             calib_func(xaxis.at[i, 'Val'], *popt) - calib_func(xaxis.at[i, 'Val'], *low_div),
                             calib_func(xaxis.at[i, 'Val'], *high_div) - calib_func(xaxis.at[i, 'Val'], *popt)])
     calib_frame = pd.DataFrame(list, columns=['Value', 'Lower limit', 'Upper limit', 'Bottom error', 'Top error'])
+    escp = uncertainties.ufloat(popt[0], err[0])
+    mtch = uncertainties.ufloat(popt[1], err[1])
+    print(escp, mtch)
     return calib_frame, popt, pcov
+
+calibrate(g2)
 
 def point_errors(calib_func, point):
     popt, pcov = curve_fit(calib_func, x, y, sigma=sigs, absolute_sigma=True)
