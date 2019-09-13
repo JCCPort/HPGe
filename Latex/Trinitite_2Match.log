@@ -1,0 +1,184 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7140 64-bit) (preloaded format=pdflatex 2019.8.20)  9 SEP 2019 19:05
+entering extended mode
+**./Trinitite_2Match.tex
+(Trinitite_2Match.tex
+LaTeX2e <2018-12-01>
+("C:\Users\Josh\AppData\Local\Programs\MiKTeX 2.9\tex/latex/base\article.cls"
+Document Class: article 2018/09/03 v1.4i Standard LaTeX document class
+("C:\Users\Josh\AppData\Local\Programs\MiKTeX 2.9\tex/latex/base\size10.clo"
+File: size10.clo 2018/09/03 v1.4i Standard LaTeX file (size option)
+)
+\c@part=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+("C:\Users\Josh\AppData\Local\Programs\MiKTeX 2.9\tex/latex/geometry\geometry.s
+ty"
+Package: geometry 2018/04/16 v5.8 Page Geometry
+
+("C:\Users\Josh\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics\keyval.sty
+"
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+("C:\Users\Josh\AppData\Local\Programs\MiKTeX 2.9\tex/generic/oberdiek\ifpdf.st
+y"
+Package: ifpdf 2018/09/07 v3.3 Provides the ifpdf switch
+)
+("C:\Users\Josh\AppData\Local\Programs\MiKTeX 2.9\tex/generic/oberdiek\ifvtex.s
+ty"
+Package: ifvtex 2016/05/16 v1.6 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+)
+("C:\Users\Josh\AppData\Local\Programs\MiKTeX 2.9\tex/generic/ifxetex\ifxetex.s
+ty"
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+\Gm@cnth=\count88
+\Gm@cntv=\count89
+\c@Gm@tempcnt=\count90
+\Gm@bindingoffset=\dimen103
+\Gm@wd@mp=\dimen104
+\Gm@odd@mp=\dimen105
+\Gm@even@mp=\dimen106
+\Gm@layoutwidth=\dimen107
+\Gm@layoutheight=\dimen108
+\Gm@layouthoffset=\dimen109
+\Gm@layoutvoffset=\dimen110
+\Gm@dimlist=\toks15
+
+("C:\Users\Josh\AppData\Local\Programs\MiKTeX 2.9\tex/latex/geometry\geometry.c
+fg"))
+("C:\Users\Josh\AppData\Local\Programs\MiKTeX 2.9\tex/latex/isotope\isotope.sty
+"
+Package: isotope 2011/08/26 v0.3 for typesetting isotopes
+)
+("C:\Users\Josh\AppData\Local\Programs\MiKTeX 2.9\tex/latex/carlisle\ltxtable.s
+ty"
+Package: ltxtable 1995/12/11 v0.2 longtable/tabularx merge (DPC)
+
+("C:\Users\Josh\AppData\Local\Programs\MiKTeX 2.9\tex/latex/tools\tabularx.sty"
+Package: tabularx 2016/02/03 v2.11b `tabularx' package (DPC)
+("C:\Users\Josh\AppData\Local\Programs\MiKTeX 2.9\tex/latex/tools\array.sty"
+Package: array 2018/12/30 v2.4k Tabular extension package (FMi)
+\col@sep=\dimen111
+\ar@mcellbox=\box27
+\extrarowheight=\dimen112
+\NC@list=\toks16
+\extratabsurround=\skip43
+\backup@length=\skip44
+\ar@cellbox=\box28
+)
+\TX@col@width=\dimen113
+\TX@old@table=\dimen114
+\TX@old@col=\dimen115
+\TX@target=\dimen116
+\TX@delta=\dimen117
+\TX@cols=\count91
+\TX@ftn=\toks17
+)
+("C:\Users\Josh\AppData\Local\Programs\MiKTeX 2.9\tex/latex/tools\longtable.sty
+"
+Package: longtable 2014/10/28 v4.11 Multi-page Table package (DPC)+ FMi change
+\LTleft=\skip45
+\LTright=\skip46
+\LTpre=\skip47
+\LTpost=\skip48
+\LTchunksize=\count92
+\LTcapwidth=\dimen118
+\LT@head=\box29
+\LT@firsthead=\box30
+\LT@foot=\box31
+\LT@lastfoot=\box32
+\LT@cols=\count93
+\LT@rows=\count94
+\c@LT@tables=\count95
+\c@LT@chunks=\count96
+\LT@p@ftn=\toks18
+))
+("C:\Users\Josh\AppData\Local\Programs\MiKTeX 2.9\tex/latex/ltablex\ltablex.sty
+"
+Package: ltablex 2014/08/13 v1.1 Modified tabularx
+) (Trinitite_2Match.aux)
+\openout1 = `Trinitite_2Match.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: twoside 
+* h-part:(L,W,R)=(0.0pt, 597.50787pt, 0.0pt)
+* v-part:(T,H,B)=(0.0pt, 845.04684pt, 0.0pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=597.50787pt
+* \textheight=845.04684pt
+* \oddsidemargin=-72.26999pt
+* \evensidemargin=-72.26999pt
+* \topmargin=-109.26999pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=30.0pt
+* \marginparwidth=111.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidetrue
+* \@mparswitchtrue
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+[1
+
+{C:/Users/Josh/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
+(Trinitite_2Match.aux) ) 
+Here is how much of TeX's memory you used:
+ 969 strings out of 492895
+ 14186 string characters out of 3124202
+ 141182 words of memory out of 3000000
+ 4928 multiletter control sequences out of 15000+200000
+ 3640 words of font info for 14 fonts, out of 3000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 28i,11n,32p,179b,223s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Users/Josh/AppData/Local/Programs/MiKTeX 2.9/fonts/
+type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Josh/AppData/Local/Programs/MiKTe
+X 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/Josh/AppData/Local/Pro
+grams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Josh/AppDat
+a/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/J
+osh/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb
+>
+Output written on Trinitite_2Match.pdf (1 page, 59660 bytes).
+PDF statistics:
+ 26 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+

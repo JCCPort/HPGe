@@ -23,7 +23,7 @@ plt.rcParams['text.latex.preamble'] = [
     r'\usepackage{isotope}',
     r'\sisetup{detect-all}',
     r'\usepackage{fourier}',
-]
+    ]
 plt.rcParams['ps.usedistiller'] = 'xpdf'
 plt.rcParams['ps.distiller.res'] = '16000'
 
@@ -46,8 +46,6 @@ os.chdir('C:\\Users\\Josh\\Documents\\git\\HPGe2\\NewestVals')
 # analmystlist_unsh = np.genfromtxt('vals_unshielded_R141117g2.csv', delimiter=',', dtype='float')
 os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2\Ranges')
 
-
-
 os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2')
 xrays2 = np.genfromtxt('xrays2.csv', delimiter=',', dtype=('U60', 'float', 'float', 'float', 'float'))
 energylist = np.genfromtxt('Energies7.csv', delimiter=',', dtype=('U60', 'float', 'float', 'float', 'float', 'U60'))
@@ -61,6 +59,7 @@ def kleinnishina(E, theta):
     c = 2.99792458e8
     E_prime = E / (1 + (E / (m0)) * (1 - np.cos(theta)))
     return E_prime
+
 
 class RangeTool(object):
     """
@@ -85,7 +84,7 @@ class RangeTool(object):
         self.ax.set_xlim(np.min(self.x), np.max(self.x))
         width = np.max(self.x) - np.min(self.x)
         height = np.max(self.y) - np.min(self.y)
-        self.ax.set_ylim(np.min(self.y)-0.1*height, np.max(self.y)+0.1*height)
+        self.ax.set_ylim(np.min(self.y) - 0.1 * height, np.max(self.y) + 0.1 * height)
         # text location in axes coords
         self.txt = ax.text(0.7, 0.9, '', transform=ax.transAxes)
         self.cid1 = figure2.figure.canvas.mpl_connect('key_press_event', self.rangeselect)
@@ -117,7 +116,7 @@ class RangeTool(object):
         print('{}'.format(indx))
         self.txt.set_text('x=%1.2f, y=%1.2f' % (x, y))
         self.figure2.figure.canvas.draw_idle()
-        #print('x=%1.2f, y=%1.2f' % (x, y))
+        # print('x=%1.2f, y=%1.2f' % (x, y))
 
     def rangeselect(self, event):
         x = event.xdata
@@ -133,10 +132,10 @@ class RangeTool(object):
             self.iu += 1
         if self.il == self.iu:
             try:
-                if math.isnan(self.Ranges.at[self.il-1, 'Displayed']):
-                    self.ax.axvspan(self.Ranges.at[self.il-1, 'Lower Bound'], self.Ranges.at[self.iu-1, 'Upper Bound'], alpha=0.1, edgecolor='k',
-                                                   linestyle='--')
-                    self.Ranges.at[self.il-1, 'Displayed'] = 1
+                if math.isnan(self.Ranges.at[self.il - 1, 'Displayed']):
+                    self.ax.axvspan(self.Ranges.at[self.il - 1, 'Lower Bound'], self.Ranges.at[self.iu - 1, 'Upper Bound'], alpha=0.1, edgecolor='k',
+                                    linestyle='--')
+                    self.Ranges.at[self.il - 1, 'Displayed'] = 1
             except ValueError:
                 pass
         self.cid3 = self.figure2.figure.canvas.mpl_connect('key_press_event', self.rangeremove)
@@ -176,13 +175,13 @@ class RangeTool(object):
             os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2\ReadableData')
         if event.key == 'escape':
             plt.close()
-        #print('\n')
-        #print('Ranges are \n {}'.format(self.Ranges))
-
-
+        # print('\n')
+        # print('Ranges are \n {}'.format(self.Ranges))
 
 
 Data = {}
+
+
 class DataRead:
     def __init__(self, peak, run, calib=None):
         self.IndependentVariable = "Energy (KeV)"
@@ -205,14 +204,14 @@ class DataRead:
         self.datafilename = '{}_{}'.format(self.peak, self.run)
         self.dataset = self.datafilename.split('.')[0]
         self.dataset = pd.read_csv('{}.csv'.format(self.datafilename), header=None, delimiter=',',
-                                 names=[self.IndependentVariable, self.DependentVariable], float_precision='round_trip')
+                                   names=[self.IndependentVariable, self.DependentVariable], float_precision='round_trip')
         if calib is not None:
             self.dataset[self.IndependentVariable] = clb.calibrate(calib)[0]['Value']
 
     def range(self):
         for i in range(0, len(self.rangename)):
-            self.xrange.append((self.dataset[self.IndependentVariable][self.rangename['LowerIndex'][i]:self.rangename['UpperIndex'][i]+1]).values)
-            self.yrange.append((self.dataset[self.DependentVariable][self.rangename['LowerIndex'][i]:self.rangename['UpperIndex'][i]+1]).values)
+            self.xrange.append((self.dataset[self.IndependentVariable][self.rangename['LowerIndex'][i]:self.rangename['UpperIndex'][i] + 1]).values)
+            self.yrange.append((self.dataset[self.DependentVariable][self.rangename['LowerIndex'][i]:self.rangename['UpperIndex'][i] + 1]).values)
             self.xrange2.append((self.dataset[self.IndependentVariable][
                                  self.rangename['LowerIndex'][i] - 5:self.rangename['UpperIndex'][i] + 6]).values)
             self.yrange2.append((self.dataset[self.DependentVariable][
@@ -238,11 +237,12 @@ class DataRead:
                 return co_a * np.exp(-((xvar - co_b) ** 2) / (2 * (co_c ** 2))) + co_d * xvar + co_e
 
             print('donger')
-            initial = (np.max(self.yranges[i]), self.xranges[i][(np.where(self.yranges[i] == np.max(self.yranges[i])))[0]][0], np.std(self.xranges[i]), -0.1, 100)
-            bounds = ([np.max(self.yranges[i])*0.1, np.min(self.xranges[i])*0.8,
-                       -np.std(self.xranges[i])*0.5, -500, -np.inf],
-                        [np.max(self.yranges[i])*1.5, np.max(self.xranges[i])*1.2,
-                         np.std(self.xranges[i])*3, 500, np.inf])
+            initial = (
+                np.max(self.yranges[i]), self.xranges[i][(np.where(self.yranges[i] == np.max(self.yranges[i])))[0]][0], np.std(self.xranges[i]), -0.1, 100)
+            bounds = ([np.max(self.yranges[i]) * 0.1, np.min(self.xranges[i]) * 0.8,
+                       -np.std(self.xranges[i]) * 0.5, -500, -np.inf],
+                      [np.max(self.yranges[i]) * 1.5, np.max(self.xranges[i]) * 1.2,
+                       np.std(self.xranges[i]) * 3, 500, np.inf])
             sigmas = np.sqrt(abs(self.yranges[i] - 0.9 * np.min(self.yranges[i])))
             popt, pcov = curve_fit(lingauss, self.xranges[i], self.yranges[i],
                                    initial, bounds=bounds, sigma=sigmas,
@@ -258,7 +258,7 @@ class DataRead:
                 print('Baseline count {}'.format(baseline(self.xranges[i][k])))
                 print('Total count {}'.format(self.yranges[i][k]))
                 print(
-                    'Peak with baseline removed count {}'.format(self.yranges[i][k] - baseline(self.xranges[i][k]) + 4))
+                        'Peak with baseline removed count {}'.format(self.yranges[i][k] - baseline(self.xranges[i][k]) + 4))
                 print('\n')
                 corr = baseline(self.xranges[i][k])
                 gap = 0 - (self.yranges[i][k] - baseline(self.xranges[i][k])) + 0.1
@@ -282,9 +282,9 @@ class DataRead:
 
             # try:
             pointerr = clb.point_errors(self.calib, popt[1])
-            centre_index = (self.rangename['LowerIndex'][i] + self.rangename['UpperIndex'][i])/2.
-            point_resolution = clb.g2(centre_index+0.5, *calib_opt) - clb.g2(centre_index-0.5, *calib_opt)
-            meanerr = np.sqrt(err[1]**2 + pointerr**2 + point_resolution**2)
+            centre_index = (self.rangename['LowerIndex'][i] + self.rangename['UpperIndex'][i]) / 2.
+            point_resolution = clb.g2(centre_index + 0.5, *calib_opt) - clb.g2(centre_index - 0.5, *calib_opt)
+            meanerr = np.sqrt(err[1] ** 2 + pointerr ** 2 + point_resolution ** 2)
             # except TypeError:
             #     meanerr = np.sqrt(err[1]**2 + 0.5**2)
             # meanerr = np.sqrt(err[1]**2 + (popt[1]*5.89813289e-14)**2 + (7.28147622e-10)**2 + 0.17908847**2)
@@ -295,7 +295,7 @@ class DataRead:
                      lingauss(np.linspace(self.xranges[i][0], self.xranges[i][-1], 500), *popt))
             if meanerr <= 2.5:
                 plotvals = plotvals.append({'ChiSq': chisq1, 'Reduced ChiSq': redchisq1,
-                                            'Mean': popt[1], 'Mean Error': meanerr, 'Amplitude': popt[0]}, ignore_index=True)
+                                            'Mean':  popt[1], 'Mean Error': meanerr, 'Amplitude': popt[0]}, ignore_index=True)
         plt.show()
         plotvals['Amplitude'] = plotvals['Amplitude'].apply(lambda x: (x / sum(plotvals['Amplitude']) * 100))
         os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2\Vals')
@@ -416,8 +416,8 @@ class DataRead:
                 # fig.suptitle((r'{} {}, Run: {}'.format(dictdict2[self.peak], labels[i], self.run)), fontsize=18)
                 os.chdir('C:\\Users\Josh\Documents\\git\HPGe2\Figures')
                 plt.savefig(
-                    'NEW{}_{:.3f}_{}_{}resid.png'.format(self.peak, popt[1], self.run, self.calib.__name__),
-                    dpi=600)
+                        'NEW{}_{:.3f}_{}_{}resid.png'.format(self.peak, popt[1], self.run, self.calib.__name__),
+                        dpi=600)
                 os.chdir('C:\\Users\Josh\Documents\\git\HPGe2\Ranges')
                 plt.close(fig)
                 # plt.show()
@@ -432,14 +432,16 @@ intensitymatch = []
 chisss = []
 formattednuclide = []
 
+
 def overlap(point1, point2, uncert1, uncert2, sigma):
-    lower1 = point1 - uncert1*sigma
-    upper1 = point1 + uncert1*sigma
-    lower2 = point2 - uncert2*sigma
-    upper2 = point2 + uncert2*sigma
+    lower1 = point1 - uncert1 * sigma
+    upper1 = point1 + uncert1 * sigma
+    lower2 = point2 - uncert2 * sigma
+    upper2 = point2 + uncert2 * sigma
     index1 = np.where((lower1 <= point2) and (upper1 >= point2) or (lower2 <= point1) and (upper2 >= point1))
     if index1[0] == 0:
         return index1[0]
+
 
 def datamatch(measured, known, sigma, type):
     os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2\Latex')
@@ -466,7 +468,7 @@ def datamatch(measured, known, sigma, type):
                 continue
     match_frame = pd.DataFrame({'Accepted energy': energymatch, 'Accepted uncertainty': energymatchuncertainty,
                                 'Measured energy': mystmatch, 'Measured uncertainty': mystmatchuncertainty,
-                                'Nuclide': formattednuclide, 'Height': intensitymatch})
+                                'Nuclide':         formattednuclide, 'Height': intensitymatch})
     os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2')
     match_frame.to_csv('{}_{}.csv'.format(type, today))
     os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2\Latex')
@@ -537,7 +539,7 @@ def datamatch(measured, known, sigma, type):
         texfile.write('\hline ')
         for i in range(0, len(match_count)):
             texfile.write(' {} & {} \\\\ \n'.format(
-                match_count['Isotope'][i], match_count['Number'][i]))
+                    match_count['Isotope'][i], match_count['Number'][i]))
         texfile.write('\hline')
         texfile.write('\\end{tabular}\n')
         texfile.write('\\ }\n')
@@ -607,7 +609,7 @@ def datamatch(measured, known, sigma, type):
         texfile.write('\hline \hline')
         for i in range(0, len(match_count)):
             texfile.write('\\ {} & {} \\\\ \n'.format(
-                match_count['Isotope'][i], match_count['Number'][i]))
+                    match_count['Isotope'][i], match_count['Number'][i]))
         texfile.write('\hline')
         texfile.write('\\end{tabular}\n')
         texfile.write('\\ }\n')
@@ -619,7 +621,7 @@ def xraymatch(measured, sigma, type):
     knownss = pd.read_csv('xrays.csv', names=['L', 'U', 'I'], float_precision='round_trip')
     print(knownss)
     match = pd.DataFrame(
-        columns=['Measured value', 'Measured uncertainty', 'Lower Range', 'Upper Range', 'Source', 'RI', 'Chi'])
+            columns=['Measured value', 'Measured uncertainty', 'Lower Range', 'Upper Range', 'Source', 'RI', 'Chi'])
     t1 = 0
     t2 = 0
     t3 = 0
@@ -700,16 +702,17 @@ def xraymatch(measured, sigma, type):
         for i in range(0, len(match)):
             mystvals = uncertainties.ufloat(match['Measured value'][i], match['Measured uncertainty'][i])
             texfile.write(
-                ' ${:.2uL}$ &  {} - {} & {} & {:.3f} & {:.3f} \\\\ \n'.format(mystvals, match['Lower Range'][i],
-                                                                              match['Upper Range'][i],
-                                                                              match['Source'][i],
-                                                                              match['RI'][i],
-                                                                              match['Chi'][i]))
+                    ' ${:.2uL}$ &  {} - {} & {} & {:.3f} & {:.3f} \\\\ \n'.format(mystvals, match['Lower Range'][i],
+                                                                                  match['Upper Range'][i],
+                                                                                  match['Source'][i],
+                                                                                  match['RI'][i],
+                                                                                  match['Chi'][i]))
         texfile.write('\hline')
         texfile.write('\\end{tabularx}\n')
         texfile.write('\\ \ }\n')
         texfile.write('\\end{document}\n')
     print('bong')
+
 
 def DataConvert(datafolder, destinationfolder):
     os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2\{}'.format(datafolder))
@@ -717,7 +720,7 @@ def DataConvert(datafolder, destinationfolder):
         print(filename)
         name = filename.split('.')[0]
         nam2 = name.split('_')
-        nam3 = nam2[0] + '_' + ('R'+nam2[1])
+        nam3 = nam2[0] + '_' + ('R' + nam2[1])
         if filename.split('.')[1] == 'txt':
             dframename1 = pd.read_csv(filename, header=None, names=['Channel', 'Counts'], delim_whitespace=True)
             print(dframename1)
@@ -785,17 +788,18 @@ def energyconv():
                 if energies['Source'][i] == '$\isotope[110m][47]{Ag}$':
                     print(energies['Source'][i], 'wank')
                     texfile.write(
-                        '\t {} & {} & {} & {} & {} \\\\ \n'.format(energies['Source'][i], energies['Energy (keV)'][i],
-                                                                   energies['$\sigma_E$ ($keV$)'][i],
-                                                                   energies['Probability'][i],
-                                                                   energies['$\sigma_P$'][i]))
+                            '\t {} & {} & {} & {} & {} \\\\ \n'.format(energies['Source'][i], energies['Energy (keV)'][i],
+                                                                       energies['$\sigma_E$ ($keV$)'][i],
+                                                                       energies['Probability'][i],
+                                                                       energies['$\sigma_P$'][i]))
         texfile.write('\hline \n')
         texfile.write('\\end{tabularx}\n')
         texfile.write('\\ }\n')
         texfile.write('\\end{document}\n')
     print(energies)
 
-#print(DataRead(1, 1).dataset)
+
+# print(DataRead(1, 1).dataset)
 def doot(peak, run, calib=None):
     plt.switch_backend('QT5Agg')
     fig, ax = plt.subplots()
@@ -893,7 +897,7 @@ double_escaped = []
 
 
 def escapematch(measured, known, sigma, type):
-    os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2\Latex')
+    os.chdir('Latex')
     for i in range(0, len(known)):
         for k in range(0, len(measured)):
             b = overlap(known[i][1], measured[k][2], known[i][2], measured[k][3], sigma)
@@ -909,7 +913,7 @@ def escapematch(measured, known, sigma, type):
                 try:
                     num2 = num1[2].split(' ')
                     formattednuclide.append(
-                        r'$\isotope[{}][{}]{{{}}}$ {} {}'.format(num2[0], num1[0], num1[1], num2[1], num2[2]))
+                            r'$\isotope[{}][{}]{{{}}}$ {} {}'.format(num2[0], num1[0], num1[1], num2[1], num2[2]))
                 except IndexError:
                     try:
                         formattednuclide.append(r'$\isotope[{}][{}]{{{}}}$'.format(num1[2], num1[0], num1[1]))
@@ -924,8 +928,8 @@ def escapematch(measured, known, sigma, type):
     print(measured_dataframe)
     match_frame = pd.DataFrame({'Accepted energy': energymatch, 'Accepted uncertainty': energymatchuncertainty,
                                 'Measured energy': mystmatch, 'Measured uncertainty': mystmatchuncertainty,
-                                'Nuclide': formattednuclide, 'Height': intensitymatch, '1 Escape': escaped,
-                                '2 Escape': double_escaped, 'chis': chisss})
+                                'Nuclide':         formattednuclide, 'Height': intensitymatch, '1 Escape': escaped,
+                                '2 Escape':        double_escaped, 'chis': chisss})
     print(match_frame)
     os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2')
     match_frame.to_csv('{}_{}.csv'.format(type, today))
@@ -938,7 +942,7 @@ def escapematch(measured, known, sigma, type):
     intensitymatch2 = []
     chisss2 = []
     datframe1 = pd.DataFrame(
-        columns=['E_acc', 'E_meas', 'unc_acc', 'unc_meas', 'source', 'type', 'matches', 'RI', 'chis'])
+            columns=['E_acc', 'E_meas', 'unc_acc', 'unc_meas', 'source', 'type', 'matches', 'RI', 'chis'])
 
     tempframe = pd.DataFrame(columns=['Escape energy', 'Escape uncertainty', 'Match energy', 'Match uncertainty',
                                       'Match isotope', 'Accepted energy', 'Accepted uncertainty', 'FEPP', 'FEPP source',
@@ -1011,18 +1015,18 @@ def escapematch(measured, known, sigma, type):
             acc = uncertainties.ufloat(tempframe.at[i, 'Accepted energy'], tempframe.at[i, 'Accepted uncertainty'])
             if float(tempframe.at[i, 'FEPP']) >= 510.9 * 2:
                 texfile.write(
-                    '\\ ${:.2uL}$ & ${:.2uL}$ & {} & ${:.2uL}$ & ${:.2uL}$ & {} & {:.2f} & {:.3f} \\\\ \n'.format(escp,
-                                                                                                                  mtch,
-                                                                                                                  tempframe.at[
-                                                                                                                      i, 'Match isotope'],
-                                                                                                                  acc,
-                                                                                                                  fepp,
-                                                                                                                  tempframe.at[
-                                                                                                                      i, 'FEPP source'],
-                                                                                                                  tempframe.at[
-                                                                                                                      i, 'RI'],
-                                                                                                                  tempframe.at[
-                                                                                                                      i, 'chi_s']))
+                        '\\ ${:.2uL}$ & ${:.2uL}$ & {} & ${:.2uL}$ & ${:.2uL}$ & {} & {:.2f} & {:.3f} \\\\ \n'.format(escp,
+                                                                                                                      mtch,
+                                                                                                                      tempframe.at[
+                                                                                                                          i, 'Match isotope'],
+                                                                                                                      acc,
+                                                                                                                      fepp,
+                                                                                                                      tempframe.at[
+                                                                                                                          i, 'FEPP source'],
+                                                                                                                      tempframe.at[
+                                                                                                                          i, 'RI'],
+                                                                                                                      tempframe.at[
+                                                                                                                          i, 'chi_s']))
         texfile.write('\hline')
         texfile.write('\\end{tabular}\n')
         texfile.write('\\end{document}\n')
@@ -1049,7 +1053,7 @@ def comptonmatch(measured, known, sigma, type):
                 try:
                     num2 = num1[2].split(' ')
                     formattednuclide.append(
-                        r'$\isotope[{}][{}]{{{}}}$ {} {}'.format(num2[0], num1[0], num1[1], num2[1], num2[2]))
+                            r'$\isotope[{}][{}]{{{}}}$ {} {}'.format(num2[0], num1[0], num1[1], num2[1], num2[2]))
                 except IndexError:
                     try:
                         formattednuclide.append(r'$\isotope[{}][{}]{{{}}}$'.format(num1[2], num1[0], num1[1]))
@@ -1063,16 +1067,16 @@ def comptonmatch(measured, known, sigma, type):
         print(comp.bcksctr(mystmatch[i]))
     measured_dataframe = pd.DataFrame(measured)
     print(measured_dataframe)
-    match_frame = pd.DataFrame({'Accepted energy': energymatch, 'Accepted uncertainty': energymatchuncertainty,
-                                'Measured energy': mystmatch, 'Measured uncertainty': mystmatchuncertainty,
-                                'Nuclide': formattednuclide, 'Height': intensitymatch, 'Compton Edge': compedge,
+    match_frame = pd.DataFrame({'Accepted energy':  energymatch, 'Accepted uncertainty': energymatchuncertainty,
+                                'Measured energy':  mystmatch, 'Measured uncertainty': mystmatchuncertainty,
+                                'Nuclide':          formattednuclide, 'Height': intensitymatch, 'Compton Edge': compedge,
                                 'Backscatter peak': backscatter, 'chis': chisss})
     print(match_frame)
-    os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2')
+    # os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2')
     match_frame.to_csv('{}_{}.csv'.format(type, today))
-    os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2\Latex')
+    os.chdir('Latex')
     datframe1 = pd.DataFrame(
-        columns=['E_acc', 'E_meas', 'unc_acc', 'unc_meas', 'source', 'type', 'matches', 'RI', 'chis'])
+            columns=['E_acc', 'E_meas', 'unc_acc', 'unc_meas', 'source', 'type', 'matches', 'RI', 'chis'])
 
     tempframe = pd.DataFrame(columns=['Comp. energy', 'Comp. uncertainty', 'Match energy', 'Match uncertainty',
                                       'Match isotope', 'Accepted energy', 'Accepted uncertainty', 'FEPP', 'FEPP source',
@@ -1128,25 +1132,25 @@ def comptonmatch(measured, known, sigma, type):
             fepp = uncertainties.ufloat(tempframe.at[i, 'FEPP'], tempframe.at[i, 'Comp. uncertainty'])
             acc = uncertainties.ufloat(tempframe.at[i, 'Accepted energy'], tempframe.at[i, 'Accepted uncertainty'])
             texfile.write(
-                '\\ ${:.2uL}$ & ${:.2uL}$ & {} & ${:.2uL}$ & ${:.2uL}$ & {} & {:.2f} & {:.3f} \\\\ \n'.format(escp,
-                                                                                                              mtch,
-                                                                                                              tempframe.at[
-                                                                                                                  i, 'Match isotope'],
-                                                                                                              acc,
-                                                                                                              fepp,
-                                                                                                              tempframe.at[
-                                                                                                                  i, 'FEPP source'],
-                                                                                                              tempframe.at[
-                                                                                                                  i, 'RI'],
-                                                                                                              tempframe.at[
-                                                                                                                  i, 'chi_s']))
+                    '\\ ${:.2uL}$ & ${:.2uL}$ & {} & ${:.2uL}$ & ${:.2uL}$ & {} & {:.2f} & {:.3f} \\\\ \n'.format(escp,
+                                                                                                                  mtch,
+                                                                                                                  tempframe.at[
+                                                                                                                      i, 'Match isotope'],
+                                                                                                                  acc,
+                                                                                                                  fepp,
+                                                                                                                  tempframe.at[
+                                                                                                                      i, 'FEPP source'],
+                                                                                                                  tempframe.at[
+                                                                                                                      i, 'RI'],
+                                                                                                                  tempframe.at[
+                                                                                                                      i, 'chi_s']))
         texfile.write('\hline')
         texfile.write('\\end{tabular}\n')
         texfile.write('\\end{document}\n')
 
 
 def coincidencematch(measured, known, sigma, type):
-    os.chdir('C:\\Users\\Josh\\Documents\\git\HPGe2\Latex')
+    os.chdir('Latex')
     for i in range(0, len(known)):
         for k in range(0, len(measured)):
             b = overlap(known[i][1], measured[k][2], known[i][2], measured[k][3], sigma)
@@ -1162,7 +1166,7 @@ def coincidencematch(measured, known, sigma, type):
                 try:
                     num2 = num1[2].split(' ')
                     formattednuclide.append(
-                        r'$\isotope[{}][{}]{{{}}}$ {} {}'.format(num2[0], num1[0], num1[1], num2[1], num2[2]))
+                            r'$\isotope[{}][{}]{{{}}}$ {} {}'.format(num2[0], num1[0], num1[1], num2[1], num2[2]))
                 except IndexError:
                     try:
                         formattednuclide.append(r'$\isotope[{}][{}]{{{}}}$'.format(num1[2], num1[0], num1[1]))
@@ -1173,10 +1177,10 @@ def coincidencematch(measured, known, sigma, type):
     print(measured_dataframe)
     match_frame = pd.DataFrame({'Accepted energy': energymatch, 'Accepted uncertainty': energymatchuncertainty,
                                 'Measured energy': mystmatch, 'Measured uncertainty': mystmatchuncertainty,
-                                'Nuclide': formattednuclide, 'Height': intensitymatch, 'chis': chisss})
+                                'Nuclide':         formattednuclide, 'Height': intensitymatch, 'chis': chisss})
     tempframe = pd.DataFrame(
-        columns=['E_1', 'E_1 uncertainty', 'E_1 RI', 'Isotope 1', 'E_2', 'E_2 uncertainty', 'E_2 RI', 'Isotope 2',
-                 'E_sum', 'E_sum uncertainty', 'Sum isotope', 'RI', 'chi_s'])
+            columns=['E_1', 'E_1 uncertainty', 'E_1 RI', 'Isotope 1', 'E_2', 'E_2 uncertainty', 'E_2 RI', 'Isotope 2',
+                     'E_sum', 'E_sum uncertainty', 'Sum isotope', 'RI', 'chi_s'])
     for i in range(0, len(match_frame)):
         for j in range(0, len(match_frame)):
             for k in range(0, len(match_frame)):
@@ -1228,16 +1232,16 @@ def coincidencematch(measured, known, sigma, type):
             es = uncertainties.ufloat(tempframe.at[i, 'E_sum'], tempframe.at[i, 'E_sum uncertainty'])
 
             texfile.write(
-                '\\ ${:.2uL}$ & ${:.2f}$ & ${:.2uL}$ & ${:.2f}$ & ${:.2uL}$ & ${:.2f}$ & {} & ${:.3f}$ \\\\ \n'.format(
-                    e1,
-                    tempframe['E_1 RI'][i],
-                    e2,
-                    tempframe['E_2 RI'][i],
-                    es,
-                    tempframe['RI'][i],
-                    tempframe['Sum isotope'][i],
-                    tempframe['chi_s'][i]))
-        texfile.write('\hline')
+                    '\\ ${:.2uL}$ & ${:.2f}$ & ${:.2uL}$ & ${:.2f}$ & ${:.2uL}$ & ${:.2f}$ & {} & ${:.3f}$ \\\\ \n'.format(
+                            e1,
+                            tempframe['E_1 RI'][i],
+                            e2,
+                            tempframe['E_2 RI'][i],
+                            es,
+                            tempframe['RI'][i],
+                            tempframe['Sum isotope'][i],
+                            tempframe['chi_s'][i]))
+        texfile.write(r'\hline')
         texfile.write('\\end{tabular}\n')
         texfile.write('\\end{document}\n')
 
